@@ -1,0 +1,57 @@
+.field-container {
+  position: relative;
+  top: 2em;
+  background: linear-gradient(to bottom, #5ec562, #2E7D32);
+  height: 260px;
+  margin: 0.1em 0;
+  z-index: 0;
+}
+.field-container .soccer-field {
+  z-index: -1;
+  position: absolute;
+  top: 1em;
+  left: 1em;
+  border: 3px solid white;
+  background: repeating-linear-gradient(to bottom, rgba(94, 197, 98, 0.25), rgba(94, 197, 98, 0.16) 50%, rgba(46, 125, 50, 0.16) 50%, rgba(46, 125, 50, 0.31));
+  background-size: 100% 29%;
+  width: calc(100% - 2em);
+  height: calc(260px - 2em);
+}
+.field-container .soccer-field .goal-one {
+  z-index: 1;
+  position: absolute;
+  width: 130px;
+  height: 59.0909090909px;
+  left: calc(50% - 65px);
+  border-color: white;
+  border-style: solid;
+  border-width: 3px;
+  border-top: none;
+}
+.field-container .soccer-field .center-circle {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  height: 27%;
+  width: 130px;
+  border-radius: 50vw 50vw 0 0;
+  border-color: white;
+  border-style: solid;
+  border-width: 3px;
+  border-bottom: none;
+  z-index: 1;
+}
+.field-container .soccer-field .center-circle .center-dot {
+  position: absolute;
+  top: 98%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/*# sourceMappingURL=FootballCourt.css.map */

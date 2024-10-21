@@ -1,0 +1,66 @@
+@media (max-width: 425px)
+  
+.modal-body
+  padding: 20px
+  display: flex
+  flex-direction: row
+  gap: 0.5em
+  justify-content: space-around
+  flex-wrap: wrap
+  span
+    width: fit-content
+    display: flex
+    justify-content: space-between
+    flex-direction: column
+    align-items: center
+
+    #plus-icon, #minus-icon
+      width: 1em
+      height: 1em
+    h5
+      font-size: 1.5em
+
+
+
+    .modal-points
+      display: flex
+      flex-direction: row
+      justify-content: space-between
+      align-items: baseline
+      width: 100%
+      gap: 1em
+
+      button
+        background-color: #3CB371
+        color: white
+        border: none
+        &:disabled
+          background-color: #d0d0d0
+          color: #252525
+
+
+  input
+    border: none
+    padding: 0.5em
+    width: 50px
+    box-shadow: rgba(0, 0, 0, 0.05) 0 6px 24px 0, rgba(0, 0, 0, 0.08) 0 0 0 1px
+    border-radius: 5px
+
+
+
+.modal-footer
+  display: flex
+  justify-content: space-between
+
+  & button, #close, #submit
+    background-color: transparent
+    color: #252525
+
+  #submit
+    border: 1px solid #3fc73f
+  #close
+    border: 1px solid #d0d0d0
+
+
+
+

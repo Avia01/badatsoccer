@@ -1,0 +1,18 @@
+#outline-shirt .cls-1 {
+  stroke-width: 0;
+}
+#outline-shirt .cls-2 {
+  stroke-width: 3px;
+}
+#outline-shirt .cls-2, #outline-shirt .cls-3, #outline-shirt .cls-4 {
+  stroke: #000;
+  stroke-miterlimit: 10;
+}
+#outline-shirt .cls-3 {
+  fill: #fff;
+}
+#outline-shirt .cls-4 {
+  stroke-width: 7px;
+}
+
+/*# sourceMappingURL=OutlineTshirtSvg.css.map */

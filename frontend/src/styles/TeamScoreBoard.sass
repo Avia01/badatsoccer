@@ -1,0 +1,56 @@
+.teams-section
+  padding: 20px
+  gap: 2em
+  border-radius: 10px
+  box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 2px 6px 2px
+
+  .teams
+    display: flex
+    justify-content: space-between
+    align-items: center
+    span > h5
+      font-size: 1.5em
+      font-weight: 600
+      color: #252525
+    .team
+      display: flex
+      align-items: center
+      width: 150px
+      gap: 10px
+      flex-direction: column
+
+      & h4
+        font-size: 16px
+        font-weight: 500
+
+
+      & i
+        font-size: 24px
+        color: #252525
+
+        &:nth-child(1)
+          color: lightgreen
+
+.scores
+  margin: 1em 0 1em 0
+  display: flex
+  align-items: baseline
+  justify-content: space-between
+
+  #score
+    display: flex
+    justify-content: space-evenly
+    align-items: baseline
+    width: 150px
+  .team-score
+    font-size: 16px
+    font-weight: 600
+
+  .scores-button
+    border: none
+    border-radius: 20em
+    background-color: #93ab9e
+    color: white
+    &:disabled
+      background-color: #d0d0d0
+      color: #252525

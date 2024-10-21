@@ -1,0 +1,20 @@
+#logo .cls-1 {
+  fill: #16c475;
+}
+#logo .cls-1, #logo .cls-2, #logo .cls-3, #logo .cls-4, #logo .cls-5 {
+  stroke-width: 0p;
+}
+#logo .cls-2 {
+  fill: #0f7041;
+}
+#logo .cls-3 {
+  fill: #d9dfe1;
+}
+#logo .cls-4 {
+  fill: #fff;
+}
+#logo .cls-5 {
+  fill: #303030;
+}
+
+/*# sourceMappingURL=Logo.css.map */

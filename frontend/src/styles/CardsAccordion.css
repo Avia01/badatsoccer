@@ -1,0 +1,94 @@
+.scores-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1em 0.5em 0.5em 0.5em;
+  margin: 0;
+  border-bottom: 1px solid #d5d5d5;
+  box-shadow: rgba(0, 0, 0, 0.04) 0 3px 5px;
+  border-radius: 5px;
+}
+.scores-card .content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-in-out;
+}
+.scores-card .content .score-details {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 0.5em;
+  margin-top: 0.5em;
+  width: 100%;
+}
+.scores-card .content .score-details h5 {
+  font-size: 0.9em;
+  font-weight: 700;
+}
+.scores-card .content .options {
+  width: 100%;
+  display: flex;
+  margin-top: 1em;
+  padding: 1px;
+  justify-content: space-between;
+}
+.scores-card .content .options #delete-button, .scores-card .content .options #edit-button {
+  padding: 0.25em;
+  border: none;
+  border-radius: 2.5px;
+  background-color: white;
+  width: 100px;
+  color: #303030;
+  font-weight: 600;
+}
+.scores-card .content .options #edit-button {
+  outline: 1px solid #63b651;
+}
+.scores-card .content .options #delete-button {
+  outline: 1px solid #DC143C;
+}
+.scores-card.open {
+  margin: 0;
+}
+.scores-card.open .content {
+  max-height: 175px;
+}
+
+.score-teams {
+  display: flex;
+  gap: 1em;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.score-teams #plus, .score-teams #x-mark {
+  scale: 1.2;
+  transition: rotate 0.3s ease-in-out;
+  color: #31915c;
+}
+.score-teams #plus {
+  rotate: 45deg;
+}
+.score-teams .card-teams-header {
+  display: flex;
+  gap: 1em;
+  width: 100%;
+  justify-content: space-around;
+  margin-bottom: 1em;
+}
+.score-teams .card-teams-header .score {
+  display: flex;
+  height: 20px;
+  gap: 1em;
+}
+.score-teams .card-teams-header .score p {
+  justify-self: center;
+  font-size: 1.2em;
+}
+
+.scores-title {
+  font-size: 1.3em;
+  font-weight: 600;
+  text-align: center;
+  color: rgba(0, 52, 30, 0.59);
+}
+
+/*# sourceMappingURL=CardsAccordion.css.map */

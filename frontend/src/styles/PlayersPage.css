@@ -1,0 +1,100 @@
+.players-container {
+  position: absolute;
+  top: 2dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: auto;
+  width: 100%;
+  z-index: 3;
+}
+.players-container .players-team-name {
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+  align-items: center;
+  padding: 0.5em;
+}
+.players-container .players-team-name h5 {
+  width: fit-content;
+  margin: 0;
+}
+.players-container .players-team {
+  margin: 0.5em auto;
+}
+.players-container .players-results {
+  width: 100%;
+}
+.players-container .players-list {
+  position: absolute;
+  top: 0.5em;
+  display: grid;
+  width: 100dvw;
+  height: 260px;
+  padding: 0 1.5em;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+.players-container .players-list .player {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  justify-self: center;
+}
+.players-container .players-list .player .player-name {
+  text-align: center;
+  font-size: 1em;
+  font-weight: 400;
+  margin: 0.4em;
+  color: white;
+}
+.players-container .players-list .player .player-image {
+  width: 4em;
+  height: 4em;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.players-container .players-list .player img {
+  object-fit: contain;
+  max-width: 100%;
+  width: 4em;
+  height: 4em;
+  border-radius: 50%;
+  margin-bottom: 0.4em;
+}
+.players-container .players-list .player:nth-child(1) {
+  grid-column: 1/span 2;
+  justify-self: center;
+  align-self: center;
+  grid-row: 1;
+}
+.players-container .players-list .player:nth-child(2) {
+  grid-column: 5/span 2;
+  justify-self: center;
+  align-self: center;
+  grid-row: 1;
+}
+.players-container .players-list .player:nth-child(3) {
+  grid-column: 1/span 2;
+  align-self: flex-start;
+  justify-self: center;
+}
+.players-container .players-list .player:nth-child(4) {
+  grid-column: 5/span 2;
+  align-self: flex-start;
+  justify-self: center;
+  grid-row: 2;
+}
+.players-container .players-list .player:nth-child(5) {
+  grid-column: 3/span 2;
+  align-self: start;
+  justify-self: center;
+  grid-row: 2;
+}
+
+/*# sourceMappingURL=PlayersPage.css.map */

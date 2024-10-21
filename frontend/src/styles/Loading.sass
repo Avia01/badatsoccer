@@ -1,0 +1,23 @@
+.loading
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  svg
+    position: relative
+    animation: linear infinite 1.4s bounce
+
+@keyframes bounce
+  0%
+    top: 0
+    animation-timing-function: cubic-bezier(0.6, -0.28, 0.735, 0.045)
+    transform: rotate(0deg)
+  50%
+    top: 50px
+    animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275)
+    transform: rotate(90deg)
+
+  100%
+    top: 0
+    animation-timing-function: cubic-bezier(0.6, -0.28, 0.735, 0.045)
+    transform: rotate(0deg)

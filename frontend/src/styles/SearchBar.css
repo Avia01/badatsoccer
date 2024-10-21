@@ -1,0 +1,55 @@
+.search-container {
+  z-index: 1;
+}
+.search-container svg {
+  color: white;
+  cursor: pointer;
+  margin-right: 2dvw;
+}
+.search-container span {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 50px;
+}
+.search-container span input[type=text] {
+  z-index: 3;
+  border: none;
+  width: 100%;
+  border-radius: 50px 0 0 50px;
+  background-color: transparent;
+  color: white;
+}
+.search-container span input[type=text]::placeholder {
+  color: rgba(255, 255, 255, 0.44);
+}
+.search-container span input[type=text]:focus {
+  outline: none;
+}
+.search-container span svg {
+  margin: 0 0.5em;
+  color: white;
+}
+.search-container .search-results {
+  position: absolute;
+  top: 120%;
+  left: 0;
+  background-color: white;
+  overflow: scroll;
+  width: 100%;
+  padding: 1em;
+  border-radius: 0 0 20px 20px;
+  height: 10em;
+  box-shadow: rgba(17, 17, 26, 0.1) 0 8px 24px, rgba(17, 17, 26, 0.1) 0 16px 56px, rgba(17, 17, 26, 0.1) 0 24px 80px;
+  z-index: 3;
+}
+.search-container .search-results.hidden {
+  display: none;
+}
+.search-container .search-results h5 {
+  font-size: 1.2em;
+}
+
+/*# sourceMappingURL=SearchBar.css.map */

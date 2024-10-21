@@ -1,0 +1,54 @@
+.search-container
+  z-index: 1
+
+  svg
+    color: white
+    cursor: pointer
+    margin-right: 2dvw
+
+  span
+    display: flex
+    justify-content: space-between
+    align-items: center
+    width: 35px
+    height: 35px
+    border-radius: 50px
+
+    input[type='text']
+      z-index: 3
+      border: none
+      width: 100%
+      border-radius: 50px 0 0 50px
+      background-color: transparent
+      color: white
+
+      &::placeholder
+        color: rgba(255, 255, 255, 0.44)
+
+      &:focus
+        outline: none
+
+    svg
+      margin: 0 0.5em
+      color: white
+
+  .search-results
+    position: absolute
+    top: 120%
+    left: 0
+    background-color: white
+    overflow: scroll
+    width: 100%
+    padding: 1em
+    border-radius: 0 0 20px 20px
+    height: 10em
+    box-shadow: rgba(17, 17, 26, 0.1) 0 8px 24px, rgba(17, 17, 26, 0.1) 0 16px 56px, rgba(17, 17, 26, 0.1) 0 24px 80px
+    z-index: 3
+
+    &.hidden
+      display: none
+
+    h5
+      font-size: 1.2em
+
+

@@ -1,0 +1,21 @@
+.players-navigation-menu {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 4em;
+}
+.players-navigation-menu span {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.players-navigation-menu select {
+  background-color: rgba(255, 255, 255, 0.84);
+  border-radius: 5px;
+  outline: none;
+  border: none;
+}
+
+/*# sourceMappingURL=PlayersNavigationManu.css.map */

@@ -1,0 +1,90 @@
+.scores-card
+  display: flex
+  flex-direction: column
+  padding: 1em 0.5em 0.5em 0.5em
+  margin: 0
+  border-bottom: 1px solid #d5d5d5
+  box-shadow: rgba(0, 0, 0, 0.04) 0 3px 5px
+  border-radius: 5px
+
+  .content
+    max-height: 0
+    overflow: hidden
+    transition: max-height 0.4s ease-in-out
+
+    .score-details
+      display: flex
+      justify-content: space-evenly
+      gap: 0.5em
+      margin-top: 0.5em
+      width: 100%
+
+      h5
+        font-size: 0.9em
+        font-weight: 700
+
+    .options
+      width: 100%
+      display: flex
+      margin-top: 1em
+      padding: 1px
+      justify-content: space-between
+
+      #delete-button, #edit-button
+        padding: 0.25em
+        border: none
+        border-radius: 2.5px
+        background-color: white
+        width: 100px
+        color: #303030
+        font-weight: 600
+
+      #edit-button
+        outline: 1px solid #63b651
+
+      #delete-button
+        outline: 1px solid #DC143C
+
+  &.open
+    margin: 0
+
+    .content
+      max-height: 175px
+
+.score-teams
+  display: flex
+  gap: 1em
+  width: 100%
+  justify-content: space-between
+  align-items: center
+
+  #plus, #x-mark
+    scale: 1.2
+    transition: rotate 0.3s ease-in-out
+    color: #31915c
+
+  #plus
+    rotate: 45deg
+
+  .card-teams-header
+    display: flex
+    gap: 1em
+    width: 100%
+    justify-content: space-around
+    margin-bottom: 1em
+
+    .score
+      display: flex
+      height: 20px
+      gap: 1em
+
+      p
+        justify-self: center
+        font-size: 1.2em
+
+.scores-title
+  font-size: 1.3em
+  font-weight: 600
+  text-align: center
+  color: rgba(0, 52, 30, 0.59)
+
