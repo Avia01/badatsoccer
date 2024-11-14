@@ -1,37 +1,30 @@
 from flask import jsonify, request
 
+from models import TeamSelection, db
 
-def get_all_fields(con):
+
+def get_all_fields():
     try:
-        cursor = con.cursor()
-        query = 'SELECT DISTINCT field_auto as field FROM [dbo].[team_selection] WHERE date = ?'
-        value = request.args.get("date")
-        cursor.execute(query, value)
-
-        rows = cursor.fetchall()
-
-        result = [dict(zip([column[0] for column in cursor.description], row)) for row in rows]
-
-        con.close()
-        return jsonify(result), 200
-
+        date = request.args.get("date")
+        results = db.session.query(TeamSelection.field_auto.label('field')).distinct().filter_by(date=date).all()
+        result_list = [{'field': result.field} for result in results]
+        return jsonify(result_list), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
 
-def get_field_by_date_and_team(con):
+def get_field_by_date_and_team():
     try:
-        cursor = con.cursor()
+        field_auto = request.args.get('field_auto')
+        date = request.args.get('date')
+        results = db.session.query(TeamSelection.team_to_pick) \
+            .filter(TeamSelection.field_auto == field_auto) \
+            .filter(TeamSelection.date == date) \
+            .distinct() \
+            .all()
+        response = [{"team_to_pick": result.team_to_pick} for result in results]
 
-        query = 'SELECT DISTINCT team_to_pick FROM [dbo].[team_selection] WHERE field_auto = ? AND date = ?'
-        field = request.args.get("field_auto")
-        date = request.args.get("date")
-        cursor.execute(query, [field, date])
-        rows = cursor.fetchall()
-
-        result = [dict(zip([column[0] for column in cursor.description], row)) for row in rows]
-        con.close()
-        return jsonify(result), 200
+        return jsonify(response)
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400

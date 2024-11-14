@@ -1,60 +1,56 @@
 from flask import jsonify, request
+from sqlalchemy import func
+from sqlalchemy.exc import SQLAlchemyError
+
+from models import TeamSelection, db
 
 
-def get_teams_by_field_and_date(con):
+def get_teams_by_field_and_date():
     try:
-        cursor = con.cursor()
+        field = request.args.get('field_auto')
+        entered_date = request.args.get('date')
 
-        query = "SELECT DISTINCT REPLACE(LOWER(team_to_pick), ' Team', '') as team from [dbo].[team_selection] WHERE field_auto = ? AND date = ?"
+        teams = db.session.query(
+            func.replace(func.lower(TeamSelection.team_to_pick), ' team', '').label('team')
+        ).filter(
+            TeamSelection.field_auto == field,
+            TeamSelection.date == entered_date
+        ).distinct().all()
 
-        field = request.args.get("field_auto")
-        entered_date = request.args.get("date")
-        cursor.execute(query, (field, entered_date))
-
-        rows = cursor.fetchall()
-
-        result = [dict(zip([column[0] for column in cursor.description], row)) for row in rows]
+        result = [{'team': team.team} for team in teams]
         return jsonify(result), 200
 
     except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+def get_all_players():
+    try:
+        date = request.args.get('date')
+        field = request.args.get('field')
+        results = db.session.query(TeamSelection).filter_by(date=date, field_auto=field)
+        result_list = [result.to_dict() for result in results]
+
+        return jsonify(result_list), 200
+
+    except SQLAlchemyError as e:
         return jsonify({"error": str(e)}), 400
     finally:
-        con.close()
+        db.session.close()
 
 
-def get_all_players(con):
+def get_team():
     try:
-        cursor = con.cursor()
-        query = 'SELECT * FROM team_selection WHERE date = ? AND field_auto = ?'
-        date = request.args.get("date")
-        field = request.args.get("field")
-
-        cursor.execute(query, (date, field))
-
-        rows = cursor.fetchall()
-        result = [dict(zip([column[0] for column in cursor.description], row)) for row in rows]
-        con.close()
-        return jsonify(result), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
-
-
-def get_team(con):
-    try:
-        cursor = con.cursor()
-        query = ("SELECT * FROM [dbo].[team_selection] "
-                 "WHERE team_to_pick = ? "
-                 "AND field_auto = ? "
-                 "AND date = ?")
-
         team_to_pick = request.args.get("team_to_pick")
         field_auto = request.args.get("field_auto")
         date = request.args.get("date")
 
-        cursor.execute(query, (team_to_pick, field_auto, date))
-        rows = cursor.fetchall()
-        result = [dict(zip([column[0] for column in cursor.description], row)) for row in rows]
-        con.close()
-        return jsonify(result), 200
-    except Exception as e:
+        result = (db.session.query(TeamSelection)
+                  .filter_by(team_to_pick=team_to_pick, field_auto=field_auto, date=date)
+                  .all())
+
+        result_list = [team.to_dict() for team in result]
+
+        return jsonify(result_list), 200
+    except SQLAlchemyError as e:
         return jsonify({"error": str(e)}), 400

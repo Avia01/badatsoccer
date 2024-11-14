@@ -1,6 +1,10 @@
 from datetime import datetime
 
 from flask import jsonify, request
+from sqlalchemy import desc
+from sqlalchemy.exc import SQLAlchemyError
+
+from models import db, Score
 
 
 def convert_date_format(iso_str):
@@ -9,155 +13,128 @@ def convert_date_format(iso_str):
     return formatted_date
 
 
-def get_scores(con):
+def get_score_by_id():
     try:
-
-        cursor = con.cursor()
-        cursor.execute(f'SELECT * FROM [dbo].[scores] ORDER BY entered_time DESC')
-
-        rows = cursor.fetchall()
-
-        data = [dict(zip([column[0] for column in cursor.description], row)) for row in rows]
-        con.close()
-        return jsonify(data), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
-
-
-def get_score_by_id(con):
-    try:
-        cursor = con.cursor()
-        query = 'SELECT * FROM [dbo].[scores] WHERE score_id = ?'
         value = request.args.get("score_id")
-        cursor.execute(query, value)
-
-        rows = cursor.fetchall()
-
-        data = [dict(zip([column[0] for column in cursor.description], row)) for row in rows]
-        con.close()
-        if cursor.rowcount == 0:
-            return jsonify({"error": "Score not found!"}), 404
-        return jsonify(data), 200
+        results = db.session.query(Score).filter(Score.score_id == value).all()
+        if len(results) == 0:
+            return jsonify({"error": 'No Score found!'}), 400
+        else:
+            result_list = [result.to_dict() for result in results]
+            return jsonify(result_list), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
 
-def get_scores_by_field_and_date(con):
+def get_scores_by_field_and_date():
     try:
-        cursor = con.cursor()
         count = request.args.get("count")
         field = request.args.get("field")
         entered_date = request.args.get("entered_date")
-        query = f'SELECT TOP({count}) * FROM [dbo].[scores] WHERE field = ? AND entered_date = ? ORDER BY entered_time DESC'
 
-        cursor.execute(query, (field, entered_date))
+        query = db.session.query(Score).filter(
+            Score.field == field,
+            Score.entered_date == entered_date
+        ).order_by(desc(Score.entered_time)).limit(count)
 
-        rows = cursor.fetchall()
+        results = query.all()
+        result_list = [{column.name: getattr(row, column.name) for column in row.__table__.columns} for row in results]
 
-        result = [dict(zip([column[0] for column in cursor.description], row)) for row in rows]
-        con.close()
-        return jsonify(result), 200
-
+        return jsonify(result_list), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+    finally:
+        db.session.close()
 
 
-def add_score(con, log):
+def add_score(log):
     if request.method == 'POST':
-
         try:
             data = request.get_json()
+            entered_date = convert_date_format(data['entered_date'])
+            entered_time = datetime.strptime(data['entered_time'], '%H:%M').time()
 
-            cursor = con.cursor()
+            new_score = Score(
+                team_a=data['team_a'],
+                score_a=data['score_a'],
+                team_b=data['team_b'],
+                score_b=data['score_b'],
+                entered_by=data['entered_by'],
+                entered_date=entered_date,
+                entered_time=entered_time,
+                field=data['field']
+            )
 
-            insert_query = (
-                "INSERT INTO [dbo].[scores] (team_a, score_a, team_b, score_b, entered_by, entered_date, entered_time, field)"
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
-
-            data['entered_date'] = convert_date_format(data['entered_date'])
-
-            cursor.execute(insert_query, (
-                data['team_a'], data['score_a'], data['team_b'], data['score_b'], data['entered_by'],
-                data['entered_date'], data['entered_time'], data['field']))
-
-            con.commit()
-            cursor.close()
+            db.session.add(new_score)
+            db.session.commit()
 
             response = {"message": "Data inserted successfully"}
-            log.log_message(request, 200)
-            return jsonify(response), 200
+            log.log_message(response, 200)
 
+            return jsonify(response), 200
         except Exception as e:
+            db.session.rollback()
             log.log_message(request, 400)
             return jsonify({"error": str(e)}), 400
+        finally:
+            db.session.close()
 
 
-def update_score(con):
+def update_score():
     try:
         score_id = request.args.get('score_id')
-
         data = request.get_json()
 
-        score_id = int(score_id)
+        try:
+            score_id = int(score_id)
+        except ValueError:
+            return jsonify({'error': 'Invalid score_id'}), 400
 
-        update_columns = []
-        params = []
+        score = db.session.query(Score).filter_by(score_id=score_id).first()
+        if not score:
+            return jsonify({'error': 'Score not found'}), 404
 
         if 'score_a' in data:
-            update_columns.append('score_a = ?')
-            params.append(data['score_a'])
+            score.score_a = data['score_a']
         if 'score_b' in data:
-            update_columns.append('score_b = ?')
-            params.append(data['score_b'])
+            score.score_b = data['score_b']
         if 'entered_date' in data:
-            update_columns.append('entered_date = ?')
-            params.append(data['entered_date'])
+            score.entered_date = data['entered_date']
         if 'entered_time' in data:
-            update_columns.append('entered_time = ?')
-            params.append(data['entered_time'])
+            score.entered_time = data['entered_time']
 
-        if not update_columns:
+        if not any(field in data for field in ['score_a', 'score_b', 'entered_date', 'entered_time']):
             return jsonify({'error': 'No valid fields provided'}), 400
 
-        sql_query = f"""
-            UPDATE [dbo].[scores]
-            SET {', '.join(update_columns)}
-            WHERE score_id = ?
-        """
-        params.append(score_id)
-        cursor = con.cursor()
-        cursor.execute(sql_query, *params)
-        con.commit()
-
-        con.close()
-        if cursor.rowcount == 0:
-            return jsonify({'error': 'Score not found'}), 404
+        db.session.commit()
         return jsonify({'message': 'Score updated successfully'}), 200
 
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 
-def delete_score(con):
-    score_id = request.args.get("score_id")
-
-    score_id = int(score_id)
+def delete_score():
     try:
+        score_id = int(request.args.get("score_id"))
+    except (TypeError, ValueError):
+        return jsonify({'error': 'Invalid score_id!'}), 400
 
-        cursor = con.cursor()
-        query = 'DELETE FROM [dbo].[scores] WHERE score_id = ?'
-        cursor.execute(query, score_id)
+    try:
+        score = Score.query.filter(Score.score_id == score_id).first()
+        if not score:
+            return jsonify({'error': 'Score not found!'}), 404
 
-        con.commit()
-
-        message = "The score has been deleted successfully!"
-        if cursor.rowcount == 0:
-            return jsonify({"error": "Score not found!"}), 404
-        con.close()
-
-        return jsonify(message), 200
+        db.session.delete(score)
+        db.session.commit()
+        return jsonify({'message': 'Score has been deleted successfully!'}), 200
 
     except Exception as e:
+        db.session.rollback()
         return jsonify({"error": str(e)}), 400
 
+    finally:
+        db.session.close()
