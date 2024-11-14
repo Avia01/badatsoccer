@@ -1,0 +1,4 @@
+2024-11-10 16:12:38,412 - logger - ERROR - "SQLCONNSTR_AZURE_SQL not found in environment variables"
+2024-11-10 16:13:04,715 - logger - ERROR - the JSON object must be str, bytes or bytearray, not NoneType
+2024-11-10 16:14:10,816 - logger - ERROR - the JSON object must be str, bytes or bytearray, not NoneType
+2024-11-10 16:14:28,508 - logger - ERROR - the JSON object must be str, bytes or bytearray, not NoneType
