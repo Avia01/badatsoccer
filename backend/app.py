@@ -1,11 +1,9 @@
 import os
-
 import bcrypt
 import pandas as pd
 import pyodbc
 from flask_bcrypt import check_password_hash
 from sqlalchemy.exc import SQLAlchemyError
-
 from models import db, TeamSelection, Player
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -154,7 +152,7 @@ def insert_players_sheet_data():
         results = []
         for i, row in sheet_data.iterrows():
             try:
-                # èéôåì áñéñîä
+                # ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 password = row.get('password', '')
                 if not password:
                     password = f"{row['player_name'][0]}{row['phone_number']}"
@@ -163,14 +161,14 @@ def insert_players_sheet_data():
                 player = db.session.query(Player).filter_by(player_name=row['player_name']).first()
 
                 if player:
-                    # òãëåï ùç÷ï ÷ééí
+                    # ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                     for key, value in row.items():
-                        if key != 'player_name':  # ìà ìòãëï àú ùí äùç÷ï
+                        if key != 'player_name':  # ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
                             setattr(player, key, value)
                     player.password = hashed_password
                     results.append({"row": i + 2, "status": "updated", "message": "Player updated successfully"})
                 else:
-                    # äëðñú ùç÷ï çãù
+                    # ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                     new_player = Player(**row.to_dict())
                     new_player.password = hashed_password
                     db.session.add(new_player)
