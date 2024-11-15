@@ -16,8 +16,7 @@ from google_services import get_google_sheet, get_data_from_sheet
 from services import scores_service as scs, game_service as gs, teams_service as ts, fields_service as fs
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL',
-                                                  'postgresql://goaltimedb_user:DuHyfpwkdXrNiN0rN6eKCmKOCFG2HdHi@dpg-csba30a3esus73bh5nsg-a.oregon-postgres.render.com/goaltimedb')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 
 db.init_app(app)
@@ -37,18 +36,6 @@ class User(UserMixin):
         self.id = id
         self.email = email
         self.password = password
-
-
-def connection():
-    connection_string = os.environ.get('SQLCONNSTR_AZURE_SQL')
-    if connection_string is not None:
-        connection_string = str(connection_string)
-    else:
-        message = '"SQLCONNSTR_AZURE_SQL not found in environment variables"'
-        log.logger.error(message)
-        return message
-    con = pyodbc.connect(connection_string)
-    return con
 
 
 @app.route('/')
