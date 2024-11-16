@@ -1,7 +1,7 @@
 import io
 import json
 import os
-
+from services import azure_services as azs
 import gspread as gs
 import pandas as pd
 from dotenv import load_dotenv
@@ -9,7 +9,6 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 
-import azure_services as azs
 
 load_dotenv()
 

@@ -1,4 +1,3 @@
-import os
 import bcrypt
 import pandas as pd
 from flask_bcrypt import check_password_hash
@@ -8,7 +7,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_login import UserMixin
 from werkzeug.utils import secure_filename
-from services import google_services as gos, azure_services
+from services import azure_services as azs, google_services as gos
 import logger as log
 from services.google_services import get_google_sheet, get_data_from_sheet
 from services import scores_service as scs, game_service as gs, teams_service as ts, fields_service as fs
@@ -198,7 +197,7 @@ def search_players_by_name():
 @app.route('/get_images_from_azure')
 def get_images_from_azure():
     blob_list = []
-    container_client = azure_services.connect_to_azure_storage('player-photo')
+    container_client = azs.connect_to_azure_storage('player-photo')
     blob_items = container_client.list_blobs()
     for blob in blob_items:
         blob_item = container_client.get_blob_client(blob=blob.name)
