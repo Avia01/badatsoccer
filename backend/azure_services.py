@@ -1,5 +1,6 @@
 import os
 from azure.storage.blob import BlobServiceClient
+
 conn_string = os.environ.get('AZURE_STORAGE_CONNECTION_STRING')
 
 
