@@ -12,6 +12,11 @@ from services import google_services as gos, azure_services
 import logger as log
 from services.google_services import get_google_sheet, get_data_from_sheet
 from services import scores_service as scs, game_service as gs, teams_service as ts, fields_service as fs
+import sys
+import os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), 'services'))
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
