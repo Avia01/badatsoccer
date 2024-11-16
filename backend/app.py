@@ -8,9 +8,9 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_login import UserMixin
 from werkzeug.utils import secure_filename
-from backend.services import google_services as gos, azure_services
+from services import google_services as gos, azure_services
 import logger as log
-from backend.services.google_services import get_google_sheet, get_data_from_sheet
+from services.google_services import get_google_sheet, get_data_from_sheet
 from services import scores_service as scs, game_service as gs, teams_service as ts, fields_service as fs
 
 app = Flask(__name__)

@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import jsonify
 from sqlalchemy.exc import SQLAlchemyError
 
-from models import TeamSelection, db
+from db_models.models import TeamSelection, db
 
 
 def format_date(d):

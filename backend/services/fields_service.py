@@ -1,6 +1,6 @@
 from flask import jsonify, request
 
-from models import TeamSelection, db
+from db_models.models import TeamSelection, db
 
 
 def get_all_fields():

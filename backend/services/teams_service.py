@@ -2,7 +2,7 @@ from flask import jsonify, request
 from sqlalchemy import func
 from sqlalchemy.exc import SQLAlchemyError
 
-from models import TeamSelection, db
+from db_models.models import TeamSelection, db
 
 
 def get_teams_by_field_and_date():

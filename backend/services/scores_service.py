@@ -4,7 +4,7 @@ from flask import jsonify, request
 from sqlalchemy import desc
 from sqlalchemy.exc import SQLAlchemyError
 
-from models import db, Score
+from db_models.models import db, Score
 
 
 def convert_date_format(iso_str):
