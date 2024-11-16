@@ -65,5 +65,6 @@ Flask-Bcrypt~=1.0.1
 Flask-Cors~=4.0.0
 Flask-Login~=0.6.3
 gspread~=5.11.2
-pywin32~=308
 pyasn1-modules~=0.3.0
+pywin32~=308
+flask-sqlalchemy~=3.1.1
