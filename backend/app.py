@@ -26,10 +26,9 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-CORS(app,
-     resources={r"/*": {"origins": ["http://localhost:3000", "https://witty-mud-09afa6410.3.azurestaticapps.net",
+CORS(app,origins=['https://goaltime.onrender.com', "http://localhost:3000" , "https://witty-mud-09afa6410.3.azurestaticapps.net",
                                     'https://www.bad-at-soccer.in', 'https://bad-at-soccer.in',
-                                    'https://python-flask-webapp-t.azurewebsites.net']}})
+                                    'https://python-flask-webapp-t.azurewebsites.net'])
 CONTAINER_NAME = 'player-photo'
 
 
