@@ -5,7 +5,6 @@ from sqlalchemy.exc import SQLAlchemyError
 from db_models.models import db, TeamSelection, Player
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from flask_login import UserMixin
 from werkzeug.utils import secure_filename
 from services import azure_services as azs, google_services as gos
 import logger as log
