@@ -32,13 +32,6 @@ CORS(app,origins=['https://badatsoccer.onrender.com', "http://localhost:3000" , 
 CONTAINER_NAME = 'player-photo'
 
 
-class User(UserMixin):
-    def __init__(self, id, email, password):
-        self.id = id
-        self.email = email
-        self.password = password
-
-
 @app.route('/')
 def home():
     message = 'Welcome to the Bad at Soccer API!'
@@ -140,7 +133,6 @@ def insert_players_sheet_data():
         results = []
         for i, row in sheet_data.iterrows():
             try:
-                # ����� ������
                 password = row.get('password', '')
                 if not password:
                     password = f"{row['player_name'][0]}{row['phone_number']}"
@@ -151,12 +143,11 @@ def insert_players_sheet_data():
                 if player:
                     # ����� ���� ����
                     for key, value in row.items():
-                        if key != 'player_name':  # �� ����� �� �� �����
+                        if key != 'player_name':
                             setattr(player, key, value)
                     player.password = hashed_password
                     results.append({"row": i + 2, "status": "updated", "message": "Player updated successfully"})
                 else:
-                    # ����� ���� ���
                     new_player = Player(**row.to_dict())
                     new_player.password = hashed_password
                     db.session.add(new_player)
@@ -169,7 +160,7 @@ def insert_players_sheet_data():
                 db.session.rollback()
 
         db.session.close()
-        log.logger.info('Sheet data processed successfully!')
+        log.logger.info('Sheet data processed successfully!'), 200
         return jsonify({"message": "Sheet processed successfully", "results": results}), 200
     except Exception as e:
         log.logger.error(e)

@@ -18,7 +18,7 @@ file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(m
 file_handler.setFormatter(file_formatter)
 
 
-def log_message(request, status_code):
+def log_message(message, request, status_code):
     if status_code == 200:
         return logger.info(f'"{request.method} {request.path}  HTTP/1.1" {status_code}')
     if status_code == 400:
@@ -26,6 +26,3 @@ def log_message(request, status_code):
 
 
 logger.addHandler(file_handler)
-
-#
-# logger = logging.getLogger(__name__)

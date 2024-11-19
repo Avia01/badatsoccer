@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import logger
 from flask import jsonify, request
 from sqlalchemy import desc
 from sqlalchemy.exc import SQLAlchemyError
@@ -53,8 +53,6 @@ def add_score(log):
         try:
             data = request.get_json()
             entered_date = convert_date_format(data['entered_date'])
-            entered_time = datetime.strptime(data['entered_time'], '%H:%M').time()
-
             new_score = Score(
                 team_a=data['team_a'],
                 score_a=data['score_a'],
@@ -62,21 +60,21 @@ def add_score(log):
                 score_b=data['score_b'],
                 entered_by=data['entered_by'],
                 entered_date=entered_date,
-                entered_time=entered_time,
+                entered_time=data['entered_time'],
                 field=data['field']
             )
-
             db.session.add(new_score)
             db.session.commit()
 
             response = {"message": "Data inserted successfully"}
-            log.log_message(response, 200)
+            log.log_message(response, request, 200)
 
             return jsonify(response), 200
         except Exception as e:
             db.session.rollback()
-            log.log_message(request, 400)
-            return jsonify({"error": str(e)}), 400
+            error_response = {"error": str(e)}
+            log.log_message({e}, request, 400)
+            return jsonify(error_response), 400
         finally:
             db.session.close()
 
