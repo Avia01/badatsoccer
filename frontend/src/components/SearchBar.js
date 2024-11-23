@@ -56,7 +56,8 @@ const SearchBar = () => {
         padding: "0.7em"
 
     };
-
+    // finding middle of the menu by Calculating menu bar width, point x1 + point x2 \ 2
+    // Position the Search bar in the middle by calc (menu bar middle point - (searchBar \ 2)
     const screenWidth = document.body.clientWidth;
     const searchBarWidth = (screenWidth / 1.4);
     const remainingSpace = (screenWidth - searchBarWidth);

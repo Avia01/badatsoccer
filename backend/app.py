@@ -19,15 +19,20 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'services'))
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+    "pool_size": 10,
+    "max_overflow": 20,
+    "pool_timeout": 30,
+    "pool_recycle": 1800,
+}
 
 db.init_app(app)
 
 with app.app_context():
     db.create_all()
 
-CORS(app,origins=['https://badatsoccer.onrender.com', "http://localhost:3000" , "https://witty-mud-09afa6410.3.azurestaticapps.net",
-                                    'https://www.bad-at-soccer.in', 'https://bad-at-soccer.in',
-                                    'https://python-flask-webapp-t.azurewebsites.net'])
+CORS(app, origins=['https://badatsoccer.onrender.com', "http://localhost:3000",
+                                    'https://www.bad-at-soccer.in', 'https://bad-at-soccer.in'])
 CONTAINER_NAME = 'player-photo'
 
 
@@ -177,7 +182,7 @@ def search_players_by_name():
             TeamSelection.player_name.ilike(f'%{search_text}%')
         ).all()
 
-        data = [player.as_dict() for player in results]
+        data = [player.to_dict() for player in results]
         return jsonify(data), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 400
@@ -247,6 +252,11 @@ def update_score():
 @app.route('/get_games_dates')
 def get_games_dates():
     return gs.get_games_dates()
+
+
+@app.route('/get_games_statistics_by_team_and_date')
+def get_games_statistics_by_team_and_date():
+    return gs.get_games_statistics_by_team_and_date()
 
 
 @app.route('/update_players_images')

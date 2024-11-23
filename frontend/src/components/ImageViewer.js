@@ -29,7 +29,7 @@ const ImageViewer = ({name, results}) => {
                 player.player_url ?
                     <img src={player.player_url} alt={player.player_name} className='player-image' style={{
                         outline: `4px solid ${getTeamColor(player.team_to_pick)}`,
-                        backgroundImage: `url(${player.player_url})`,
+                        // backgroundImage: `url(${player.player_url})`,
                     }}/> :
                     <img style={{outline: `4px solid ${getTeamColor(player.team_to_pick)}`}}
                          src="https://q-reviews.com/wp-content/uploads/2022/08/Profile_avatar_placeholder_large.png"

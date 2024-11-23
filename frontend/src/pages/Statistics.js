@@ -227,7 +227,7 @@ const Statistics = () => {
             return {
                 ...team,
                 successRate: stats.MP > 0 ? ((stats.W / stats.MP) * 100).toFixed(2) + '%' : '0%',
-                goalsPerGame: parseInt(averageGoals),
+                goalsPerGame: averageGoals,
                 goalsAgainstPerGame: stats.MP > 0 ? (stats.GA / stats.MP).toFixed(1) : 0
             }
         }

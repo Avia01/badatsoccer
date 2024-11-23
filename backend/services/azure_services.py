@@ -1,11 +1,11 @@
 import os
 from azure.storage.blob import BlobServiceClient
 
-conn_string = os.environ.get('AZURE_STORAGE_CONNECTION_STRING')
+AZURE_STORAGE_CONN_STR = os.environ.get('AZURE_STORAGE_CONNECTION_STRING')
 
 
 def create_blob_service():
-    return BlobServiceClient.from_connection_string(conn_str=conn_string)
+    return BlobServiceClient.from_connection_string(conn_str=AZURE_STORAGE_CONN_STR)
 
 
 def blob_exists(container_client, blob_name):

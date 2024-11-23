@@ -67,7 +67,7 @@ def add_score(log):
             db.session.commit()
 
             response = {"message": "Data inserted successfully"}
-            log.log_message(response, request, 200)
+            log.log_message(request, 200)
 
             return jsonify(response), 200
         except Exception as e:
