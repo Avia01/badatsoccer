@@ -6,6 +6,7 @@ import CardsAccordion from "./CardsAccordion";
 import useSelectedField from "../hooks/useSelectedField";
 import Loading from "./Loading";
 import useFields from "../hooks/useFields";
+import {toISODate} from "../pages/EntryFormPage";
 
 const Scores = ({isModalOpen, setIsModalOpen}) => {
 
@@ -28,7 +29,7 @@ const Scores = ({isModalOpen, setIsModalOpen}) => {
     }
 
     const {data, refetch} = useQuery({
-        queryFn: () => getScoreByFieldName({selectedField, date, count: count}),
+        queryFn: () => getScoreByFieldName({selectedField, date: toISODate(date), count: count}),
         queryKey: ["score", selectedField, date, count],
         onSuccess: setScores
     })
@@ -37,22 +38,6 @@ const Scores = ({isModalOpen, setIsModalOpen}) => {
         setIsLoading(true);
         refetch().then(_ => setIsLoading(false));
     }, [data, scores, refetch, date]);
-
-    // // Infinite scroll logic
-    // useEffect(() => {
-    //     const handleScroll = () => {
-    //         if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 2 && !isLoading) {
-    //
-    //             loadMoreScores();
-    //         }
-    //     };
-    //
-    //     window.addEventListener('scroll', handleScroll);
-    //
-    //     return () => {
-    //         window.removeEventListener('scroll', handleScroll);
-    //     };
-    // }, [isLoading]);
 
     return (
         isLoading ?

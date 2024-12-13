@@ -1,0 +1,54 @@
+2024-11-18 14:39:17,892 - logger - ERROR - Insertion error for row 74: (psycopg2.errors.InvalidTextRepresentation) invalid input syntax for type numeric: ""
+LINE 1: ... ('', 'גיל שרייבמן', 'Gil Shraibman', ' גרועים ', '', 'playe...
+                                                             ^
+
+[SQL: INSERT INTO players (phone_number, heb, player_name, tournament, rating, type, password, payment_type, id, aa, last_game_date, join_date, birthday, gmail, football_team) VALUES (%(phone_number)s, %(heb)s, %(player_name)s, %(tournament)s, %(rating)s, %(type)s, %(password)s, %(payment_type)s, %(id)s, %(aa)s, %(last_game_date)s, %(join_date)s, %(birthday)s, %(gmail)s, %(football_team)s) RETURNING players.player_id]
+[parameters: {'phone_number': '', 'heb': 'גיל שרייבמן', 'player_name': 'Gil Shraibman', 'tournament': ' גרועים ', 'rating': '', 'type': 'player', 'password': '$2b$12$ot1rcyE7U3djinZTZf8eDeQYUA2Z40gaKjOrEQIcWH20tbtHwt.E.', 'payment_type': '', 'id': '73', 'aa': None, 'last_game_date': '', 'join_date': '24.06.22', 'birthday': None, 'gmail': None, 'football_team': None}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+2024-11-18 14:44:14,466 - logger - ERROR - Insertion error for row 277: (psycopg2.errors.InvalidTextRepresentation) invalid input syntax for type numeric: ""
+LINE 1: ...VALUES ('', 'ירדן כהן', 'Yarden Cohen', 'גרועים', '', 'playe...
+                                                             ^
+
+[SQL: INSERT INTO players (phone_number, heb, player_name, tournament, rating, type, password, payment_type, id, aa, last_game_date, join_date, birthday, gmail, football_team) VALUES (%(phone_number)s, %(heb)s, %(player_name)s, %(tournament)s, %(rating)s, %(type)s, %(password)s, %(payment_type)s, %(id)s, %(aa)s, %(last_game_date)s, %(join_date)s, %(birthday)s, %(gmail)s, %(football_team)s) RETURNING players.player_id]
+[parameters: {'phone_number': '', 'heb': 'ירדן כהן', 'player_name': 'Yarden Cohen', 'tournament': 'גרועים', 'rating': '', 'type': 'player', 'password': '$2b$12$E612WlT5Bob9JQGz8FuN3e2C6HdEpDZVto8fbvcWpf56vlPILSAA.', 'payment_type': None, 'id': '276', 'aa': None, 'last_game_date': None, 'join_date': None, 'birthday': None, 'gmail': None, 'football_team': None}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+2024-11-18 14:44:15,889 - logger - ERROR - Insertion error for row 278: (psycopg2.errors.InvalidTextRepresentation) invalid input syntax for type numeric: ""
+LINE 1: ...17641', 'שי ליבוביץ', 'Shay Leibovich', 'גרועים', '', 'playe...
+                                                             ^
+
+[SQL: INSERT INTO players (phone_number, heb, player_name, tournament, rating, type, password, payment_type, id, aa, last_game_date, join_date, birthday, gmail, football_team) VALUES (%(phone_number)s, %(heb)s, %(player_name)s, %(tournament)s, %(rating)s, %(type)s, %(password)s, %(payment_type)s, %(id)s, %(aa)s, %(last_game_date)s, %(join_date)s, %(birthday)s, %(gmail)s, %(football_team)s) RETURNING players.player_id]
+[parameters: {'phone_number': '0507717641', 'heb': 'שי ליבוביץ', 'player_name': 'Shay Leibovich', 'tournament': 'גרועים', 'rating': '', 'type': 'player', 'password': '$2b$12$zORgdUMRfpBoSA3BDfB.BOm3vbPEhGXS.TI.0kAPXGQ/52GtyN6fW', 'payment_type': '', 'id': '277', 'aa': None, 'last_game_date': '', 'join_date': '', 'birthday': '', 'gmail': 'shailebo@gmail.com', 'football_team': None}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+2024-11-18 14:44:17,235 - logger - ERROR - Insertion error for row 279: (psycopg2.errors.InvalidTextRepresentation) invalid input syntax for type numeric: ""
+LINE 1: ...434144', 'מוטי בוגנים', 'Moti Buganim', 'גרועים', '', 'playe...
+                                                             ^
+
+[SQL: INSERT INTO players (phone_number, heb, player_name, tournament, rating, type, password, payment_type, id, aa, last_game_date, join_date, birthday, gmail, football_team) VALUES (%(phone_number)s, %(heb)s, %(player_name)s, %(tournament)s, %(rating)s, %(type)s, %(password)s, %(payment_type)s, %(id)s, %(aa)s, %(last_game_date)s, %(join_date)s, %(birthday)s, %(gmail)s, %(football_team)s) RETURNING players.player_id]
+[parameters: {'phone_number': '0529434144', 'heb': 'מוטי בוגנים', 'player_name': 'Moti Buganim', 'tournament': 'גרועים', 'rating': '', 'type': 'player', 'password': '$2b$12$RIO.ch5kzkQLq1QrZj4SvueRl9WzDnaUErXo1wvKEmYFltjdJOidS', 'payment_type': 'תשלום ווצאפ', 'id': '278', 'aa': None, 'last_game_date': '', 'join_date': '', 'birthday': '', 'gmail': 'motibuganim12342@gmail.com', 'football_team': None}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+2024-11-18 14:44:18,569 - logger - ERROR - Insertion error for row 280: (psycopg2.errors.InvalidTextRepresentation) invalid input syntax for type numeric: ""
+LINE 1: ...507964492', 'שחף עדין', 'Shachaf Adin', 'גרועים', '', 'playe...
+                                                             ^
+
+[SQL: INSERT INTO players (phone_number, heb, player_name, tournament, rating, type, password, payment_type, id, aa, last_game_date, join_date, birthday, gmail, football_team) VALUES (%(phone_number)s, %(heb)s, %(player_name)s, %(tournament)s, %(rating)s, %(type)s, %(password)s, %(payment_type)s, %(id)s, %(aa)s, %(last_game_date)s, %(join_date)s, %(birthday)s, %(gmail)s, %(football_team)s) RETURNING players.player_id]
+[parameters: {'phone_number': '0507964492', 'heb': 'שחף עדין', 'player_name': 'Shachaf Adin', 'tournament': 'גרועים', 'rating': '', 'type': 'player', 'password': '$2b$12$g/WS9wLG78IxhP3SfnFoben9rKaRTy2un.VAahZlKz2BFH5AnTu3G', 'payment_type': '', 'id': '279', 'aa': None, 'last_game_date': '', 'join_date': '', 'birthday': '', 'gmail': 'shachaf84@gmail.com', 'football_team': None}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+2024-11-18 14:44:19,903 - logger - ERROR - Insertion error for row 281: (psycopg2.errors.InvalidTextRepresentation) invalid input syntax for type numeric: ""
+LINE 1: ...S ('', 'יוני כהן נאמן', 'Yoni Cohen N', 'גרועים', '', 'playe...
+                                                             ^
+
+[SQL: INSERT INTO players (phone_number, heb, player_name, tournament, rating, type, password, payment_type, id, aa, last_game_date, join_date, birthday, gmail, football_team) VALUES (%(phone_number)s, %(heb)s, %(player_name)s, %(tournament)s, %(rating)s, %(type)s, %(password)s, %(payment_type)s, %(id)s, %(aa)s, %(last_game_date)s, %(join_date)s, %(birthday)s, %(gmail)s, %(football_team)s) RETURNING players.player_id]
+[parameters: {'phone_number': '', 'heb': 'יוני כהן נאמן', 'player_name': 'Yoni Cohen N', 'tournament': 'גרועים', 'rating': '', 'type': 'player', 'password': '$2b$12$HS8j1yBVRpHTJO878Gvvxe90MLnLRbfgkVrk0R0pBYo/ycuRGp1ra', 'payment_type': '', 'id': '280', 'aa': None, 'last_game_date': '', 'join_date': '', 'birthday': '', 'gmail': 'yohankon13@gmail.com', 'football_team': None}]
+(Background on this error at: https://sqlalche.me/e/20/9h9h)
+2024-11-18 14:44:32,339 - logger - INFO - Sheet data processed successfully!
+2024-11-18 17:36:49,694 - logger - ERROR - "POST /add_score  HTTP/1.1" 400
+2024-11-18 17:37:32,287 - logger - ERROR - "POST /add_score  HTTP/1.1" 400
+2024-11-18 17:39:14,017 - logger - ERROR - "POST /add_score  HTTP/1.1" 400
+2024-11-18 17:40:45,445 - logger - ERROR - "POST /add_score  HTTP/1.1" 400
+2024-11-18 17:40:58,954 - logger - ERROR - "POST /add_score  HTTP/1.1" 400
+2024-11-18 17:46:07,644 - logger - ERROR - "POST /add_score  HTTP/1.1" 400
+2024-11-18 17:46:30,379 - logger - ERROR - "POST /add_score  HTTP/1.1" 400
+2024-11-18 17:46:47,393 - logger - ERROR - "POST /add_score  HTTP/1.1" 400
+2024-11-18 17:47:44,888 - logger - ERROR - "POST /add_score  HTTP/1.1" 400
+2024-11-18 17:56:20,449 - logger - ERROR - "POST /add_score  HTTP/1.1" 400
+2024-11-18 17:58:48,022 - logger - ERROR - "POST /add_score  HTTP/1.1" 400

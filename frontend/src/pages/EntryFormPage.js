@@ -12,6 +12,7 @@ import {reverseTeamName} from "../components/TeamSelect";
 import DatePicker from "../components/DatePicker";
 import useFields from "../hooks/useFields";
 import useAuth from "../hooks/useAuth";
+import moment from "moment/moment";
 
 const EntryFormPage = () => {
 
@@ -113,10 +114,10 @@ export const formatDate = (dateString) => {
         year: 'numeric',
     });
 };
-export const getLocalTime = (time = new Date()) => {
+export const getLocalTime = (time : Date) => {
     return time.toLocaleString('he-IL', {hour: '2-digit', minute: "2-digit"});
 }
 
-export const toISODate = (date) => {
-    return new Date(date).toLocaleString('fr-CA', {year: "numeric", month: '2-digit', day: '2-digit'})
+export const toISODate = (date: Date) => {
+    return moment(date, 'DD/MM/YYYY').format('YYYY-MM-DD');
 }

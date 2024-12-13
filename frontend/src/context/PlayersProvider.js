@@ -2,7 +2,7 @@ import {createContext, useState} from "react";
 import {getAllPlayers, getTeamsByPlayerName} from "../service/TeamsService";
 import {useQuery} from "react-query";
 import useFields from "../hooks/useFields";
-import {formatDate} from "../pages/EntryFormPage";
+import {formatDate, toISODate} from "../pages/EntryFormPage";
 import useSelectedField from "../hooks/useSelectedField";
 
 const PlayersContext = createContext({});
@@ -15,11 +15,11 @@ export const PlayersProvider = ({children}) => {
     const {date} = useFields()
     const {selectedField} = useSelectedField()
 
-    const localDate = formatDate(date)
+    // const localDate = formatDate(date)
 
     const {isFetching} = useQuery({
         queryKey: ['players', date, selectedField],
-        queryFn: () => getAllPlayers({date: localDate, field: selectedField}),
+        queryFn: () => getAllPlayers({date: toISODate(date), field: selectedField}),
         onSuccess: setPlayers,
     });
 
@@ -27,7 +27,7 @@ export const PlayersProvider = ({children}) => {
         queryKey: ['player', playerId, date, playerTeam, selectedField],
         queryFn: () => getTeamsByPlayerName(
 
-            {team_to_pick: playerTeam, date: localDate, field_auto: selectedField}),
+            {team_to_pick: playerTeam, date: toISODate(date), field_auto: selectedField}),
         onSuccess: setPlayer,
         enabled: playerId !== null
     });

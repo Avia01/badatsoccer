@@ -9,7 +9,7 @@ import ShirtSvg from "../assets/ShirtSvg";
 import Loading from "../components/Loading";
 import {getTeamsByFieldAndDate} from "../service/TeamsService";
 import {showNotification} from "../App";
-import {formatDate} from "./EntryFormPage";
+import {formatDate, toISODate} from "./EntryFormPage";
 import useFields from "../hooks/useFields";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faInfoCircle} from "@fortawesome/free-solid-svg-icons";
@@ -46,7 +46,7 @@ const Statistics = () => {
 
     useQuery(['teams', teams, selectedField, date], () => getTeamsByFieldAndDate({
         field: selectedField,
-        date: formatDate(date)
+        date: toISODate(date)
     }), {
         onSuccess: setTeams,
         onError: (err) => {
@@ -65,7 +65,7 @@ const Statistics = () => {
     }
 
     useQuery({
-        queryFn: () => getStatistics(selectedField, date),
+        queryFn: () => getStatistics(selectedField, toISODate(date)),
         queryKey: ['statistics', games, selectedField, date],
         onSuccess: (date) => {
             setGames(date)

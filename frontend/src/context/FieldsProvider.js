@@ -1,7 +1,7 @@
 import {createContext, useState} from "react";
 import {useQuery} from "react-query";
 import {getAllFieldsByDate} from "../service/FieldService";
-import {formatDate} from "../pages/EntryFormPage";
+import {formatDate, toISODate} from "../pages/EntryFormPage";
 import useSelectedField from "../hooks/useSelectedField";
 
 const FieldsContext = createContext({})
@@ -23,7 +23,7 @@ export const FieldsProvider = ({children}) => {
 
 
 
-    useQuery(['fields', date, fields, selectedField], () => getAllFieldsByDate(formatDate(date)), {
+    useQuery(['fields', date, fields, selectedField], () => getAllFieldsByDate(toISODate(date)), {
         onSuccess: (data) => handleFieldNotExist(data),
     });
 

@@ -3,7 +3,7 @@ import {getField} from "../service/FieldService";
 import '../styles/TeamSelect.css'
 import useFields from "../hooks/useFields";
 import {useQuery} from "react-query";
-import {formatDate} from "../pages/EntryFormPage";
+import {formatDate, toISODate} from "../pages/EntryFormPage";
 import {showNotification} from "../App";
 
 const TeamSelect = ({selectedField, teams, setTeams, teamA, setTeamA, teamB, setTeamB}) => {
@@ -11,7 +11,7 @@ const TeamSelect = ({selectedField, teams, setTeams, teamA, setTeamA, teamB, set
     const {date} = useFields();
 
     useQuery({
-        queryFn: () => getField({field_auto: selectedField, date: formatDate(date)}),
+        queryFn: () => getField({field_auto: selectedField, date: toISODate(date)}),
         queryKey: ["field", selectedField, date, setTeams, teamA, teamB],
         onSuccess: setTeams,
         onError: (err) => {

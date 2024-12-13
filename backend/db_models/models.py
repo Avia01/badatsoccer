@@ -20,7 +20,7 @@ class TeamSelection(db.Model):
     tournament_to_pick = db.Column(db.String(255))
     team_to_pick = db.Column(db.String(255))
     field_auto = db.Column(db.String(50))
-    date = db.Column(db.String(50))
+    date = db.Column(db.Date)
 
     def to_dict(self):
         return {

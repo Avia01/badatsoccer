@@ -36,7 +36,7 @@ const DatePicker = ({style, title}) => {
     }
 
     const dates = data?.map(date => {
-        return toISODate(date.date)
+        return date.date
     })
     
     return (
@@ -44,7 +44,7 @@ const DatePicker = ({style, title}) => {
             <label>{title}</label>
             <select className="selection" onChange={(e) => handleDateChange(e.target.value)}>
                     <option value="" selected disabled>Select date</option>
-                {dates && dates?.map((date, i) => <option key={i} selected={!selectedDate ? findClosestDate(dates) : selectedDate === date} value={date}>{formatDate(date)}</option>)}
+                {dates && dates?.map((date, i) => <option key={i} selected={!selectedDate ? findClosestDate(dates) : selectedDate === date} value={date}>{date}</option>)}
             </select>
         </span>
     );
