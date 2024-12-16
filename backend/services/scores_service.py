@@ -67,13 +67,13 @@ def add_score(log):
             db.session.commit()
 
             response = {"message": "Data inserted successfully"}
-            log.log_message(request, 200)
+            log.log_message(request, response, 200)
 
             return jsonify(response), 200
         except Exception as e:
             db.session.rollback()
             error_response = {"error": str(e)}
-            log.log_message({e}, request, 400)
+            log.log_message(request, error_response, 400)
             return jsonify(error_response), 400
         finally:
             db.session.close()
@@ -106,13 +106,17 @@ def update_score():
             return jsonify({'error': 'No valid fields provided'}), 400
 
         db.session.commit()
-        return jsonify({'message': 'Score updated successfully'}), 200
+        message = {'message': 'Score updated successfully'}
+        log.log_message(request, {'message': 'Score updated successfully'}, 200)
+        return jsonify(message), 200
 
     except SQLAlchemyError as e:
         db.session.rollback()
-        return jsonify({'error': str(e)}), 500
+        error_message = {'error': str(e)}
+        return jsonify(error_message), 500
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        error_message = {'error': str(e)}
+        return jsonify(error_message), 500
 
 
 def delete_score():
@@ -124,15 +128,18 @@ def delete_score():
     try:
         score = Score.query.filter(Score.score_id == score_id).first()
         if not score:
-            return jsonify({'error': 'Score not found!'}), 404
+            message = {'error': 'Score not found!'}
+            return jsonify(message), 404
 
         db.session.delete(score)
         db.session.commit()
-        return jsonify({'message': 'Score has been deleted successfully!'}), 200
+        message = {'message': 'Score has been deleted successfully!'}
+        return jsonify(message), 200
 
     except Exception as e:
         db.session.rollback()
-        return jsonify({"error": str(e)}), 400
+        error_message = {"error": str(e)}
+        return jsonify(error_message), 400
 
     finally:
         db.session.close()

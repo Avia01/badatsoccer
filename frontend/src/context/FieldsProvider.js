@@ -1,7 +1,7 @@
 import {createContext, useState} from "react";
 import {useQuery} from "react-query";
 import {getAllFieldsByDate} from "../service/FieldService";
-import {formatDate, toISODate} from "../pages/EntryFormPage";
+import {toISODate} from "../pages/EntryFormPage";
 import useSelectedField from "../hooks/useSelectedField";
 
 const FieldsContext = createContext({})
