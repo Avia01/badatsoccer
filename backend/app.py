@@ -1,7 +1,9 @@
-import bcrypt
+import jwt
 import pandas as pd
 from flask_bcrypt import check_password_hash
+from settings import SECRET_KEY
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy import and_, or_
 from db_models.models import db, TeamSelection, Player
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -10,12 +12,11 @@ from services import azure_services as azs, google_services as gos
 import logger as log
 from services.google_services import get_google_sheet, get_data_from_sheet
 from services import scores_service as scs, game_service as gs, teams_service as ts, fields_service as fs
-from datetime import datetime
+import datetime
 import sys
 import os
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'services'))
-
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
@@ -33,8 +34,9 @@ with app.app_context():
     db.create_all()
 
 CORS(app, origins=['https://badatsoccer.onrender.com', "http://localhost:3000",
-                                    'https://www.bad-at-soccer.in', 'https://bad-at-soccer.in'])
+                   'https://www.bad-at-soccer.in', 'https://bad-at-soccer.in'])
 CONTAINER_NAME = 'player-photo'
+JWT_SECRET_KEY = os.getenv('SECRET_KEY')
 
 
 @app.route('/')
@@ -68,7 +70,7 @@ def clear_log():
 def parse_date(date_str):
     for fmt in ('%d/%m/%Y', '%Y-%m-%d'):  # Handle multiple date formats
         try:
-            return datetime.strptime(date_str, fmt).date()
+            return datetime.datetime.strptime(date_str, fmt).date()
         except ValueError:
             continue
     raise ValueError(f"Date '{date_str}' does not match any known formats")
@@ -77,226 +79,85 @@ def parse_date(date_str):
 @app.route('/insert_team_selection_sheet_data')
 def insert_team_selection_sheet_data():
     try:
-        # Google Sheets details
         sheet_id = "1BL1KkNbhp4cn8WrFByKYUId0Xm10eMqncMdtAMLqkgA"
         sheet = get_google_sheet(sheet_id)
-        sheet_data = get_data_from_sheet(sheet, 'A', 'L')  # Columns A to L
+        sheet_data = get_data_from_sheet(sheet, 'A', 'L')
+
+        sheet_data['date'] = sheet_data['date'].apply(lambda x: datetime.strptime(x, '%d/%m/%Y').date())
+
+        unique_pairs = sheet_data[['date', 'player_name']].drop_duplicates()
+
+        existing_records = db.session.query(TeamSelection.date, TeamSelection.player_name).filter(
+            or_(*[
+                and_(TeamSelection.date == row['date'], TeamSelection.player_name == row['player_name'])
+                for _, row in unique_pairs.iterrows()
+            ])
+        ).all()
+
+        existing_pairs = {(record[0], record[1]) for record in existing_records}
 
         results = []
 
-        # Use session.no_autoflush to prevent premature flushing
-        with db.session.no_autoflush:
-            for i, row in sheet_data.iterrows():
+        for i, row in sheet_data.iterrows():
+            if row.drop(['date', 'player_name']).apply(lambda x: pd.isna(x) or x == '').any():
+                results.append({
+                    "row": i + 2,
+                    "status": "skipped",
+                    "message": "Row contains empty values except for date and player_name"
+                })
+                continue
+
+            date_field = row['date']
+            player_name_field = row['player_name']
+
+            if (date_field, player_name_field) in existing_pairs:
                 try:
-                    # Parse and validate fields
-                    date = parse_date(row['date'])
-                    player_name = row['player_name']
-                    team = row.get('team')
-                    stamina = int(row['stamina']) if row.get('stamina') else None
-                    technique = int(row['technique']) if row.get('technique') else None
-                    ball_leader = int(row['ball_leader']) if row.get('ball_leader') else None
-                    aggression = int(row['aggression']) if row.get('aggression') else None
-                    tournament = row.get('tournament')
-                    version = row.get('version')
-                    tournament_to_pick = row.get('tournament_to_pick')
-                    team_to_pick = row.get('team_to_pick')
-                    field_auto = row.get('field_auto')
-
-                    # Check for existing record
-                    existing_record = TeamSelection.query.filter_by(date=date, player_name=player_name).first()
-                    if existing_record:
-                        # Update the existing record
-                        existing_record.team = team
-                        existing_record.stamina = stamina
-                        existing_record.technique = technique
-                        existing_record.ball_leader = ball_leader
-                        existing_record.aggression = aggression
-                        existing_record.tournament = tournament
-                        existing_record.version = version
-                        existing_record.tournament_to_pick = tournament_to_pick
-                        existing_record.team_to_pick = team_to_pick
-                        existing_record.field_auto = field_auto
-                        results.append({"row": i + 2, "status": "updated", "message": "Record updated successfully"})
-                    else:
-                        # Insert a new record
-                        new_record = TeamSelection(
-                            date=date,
-                            player_name=player_name,
-                            team=team,
-                            stamina=stamina,
-                            technique=technique,
-                            ball_leader=ball_leader,
-                            aggression=aggression,
-                            tournament=tournament,
-                            version=version,
-                            tournament_to_pick=tournament_to_pick,
-                            team_to_pick=team_to_pick,
-                            field_auto=field_auto,
+                    team_selection = db.session.query(TeamSelection).filter(
+                        and_(
+                            TeamSelection.date == date_field,
+                            TeamSelection.player_name == player_name_field
                         )
-                        db.session.add(new_record)
-                        results.append({"row": i + 2, "status": "inserted", "message": "Record inserted successfully"})
-                except ValueError as ve:
-                    results.append({"row": i + 2, "status": "failed", "message": str(ve)})
+                    ).first()
 
-        # Commit all changes
-        db.session.commit()
-        message = {"message": "Sheet data processed successfully", "results": results}
-        log.log_message(request, message.get('message'), 200)
-        return jsonify(message), 200
+                    for key, value in row.items():
+                        if key not in ['date', 'player_name']:
+                            setattr(team_selection, key, value)
+
+                    db.session.commit()
+                    results.append({
+                        "row": i + 2,
+                        "status": "updated",
+                        "message": "Row updated successfully"
+                    })
+                except Exception as update_error:
+                    results.append({
+                        "row": i + 2,
+                        "status": "failed",
+                        "message": f"Update error: {update_error}"
+                    })
+            else:
+                try:
+                    new_record = TeamSelection(
+                        **{key: row[key] for key in row.keys()}
+                    )
+                    db.session.add(new_record)
+                    db.session.commit()
+                    results.append({
+                        "row": i + 2,
+                        "status": "success",
+                        "message": "Row inserted successfully"
+                    })
+                except Exception as insert_error:
+                    results.append({
+                        "row": i + 2,
+                        "status": "failed",
+                        "message": f"Insertion error: {insert_error}"
+                    })
+
+        return jsonify({"message": "Sheet processed successfully", "results": results}), 200
 
     except Exception as e:
         db.session.rollback()
-        log.log_message(request, {'error': str(e)}, 400)
-        return jsonify({"error": str(e)}), 400
-
-
-# @app.route('/insert_team_selection_sheet_data')
-# def insert_team_selection_sheet_data():
-#     try:
-#         sheet_id = "1BL1KkNbhp4cn8WrFByKYUId0Xm10eMqncMdtAMLqkgA"
-#         sheet = get_google_sheet(sheet_id)
-#
-#         if sheet is None:
-#             raise ValueError("Failed to retrieve Google Sheet")
-#
-#         sheet_data = get_data_from_sheet(sheet, 'A', 'L')
-#
-#         if sheet_data is None:
-#             raise ValueError("Failed to retrieve data from Google Sheet")
-#
-#         sheet_data['date'] = pd.to_datetime(sheet_data['date'], dayfirst=True, errors='coerce').dt.strftime('%Y-%m-%d')
-#
-#         if sheet_data['date'].isna().any():
-#             raise ValueError("Invalid dates detected in the data.")
-#
-#         # Fetch all existing player names and dates
-#         existing_pairs = {
-#             (record.player_name, record.date): record
-#             for record in TeamSelection.query.all()
-#         }
-#
-#         results = []
-#         success_count = 0
-#         failure_count = 0
-#
-#         for i, row in sheet_data.iterrows():
-#             # Skip rows with missing player_name or date
-#             if pd.isna(row['player_name']) or pd.isna(row['date']):
-#                 results.append({
-#                     "row": i + 2,
-#                     "status": "skipped",
-#                     "message": "Row skipped due to missing player_name or date."
-#                 })
-#                 continue
-#
-#             pair_key = (row['player_name'], row['date'])
-#
-#             if pair_key in existing_pairs:
-#                 # Update the existing record
-#                 try:
-#                     record = existing_pairs[pair_key]
-#                     for key, value in row.items():
-#                         if key != 'player_id':  # Avoid changing the primary key
-#                             setattr(record, key, value)
-#                     db.session.commit()
-#                     results.append({
-#                         "row": i + 2,
-#                         "status": "updated",
-#                         "message": "Record updated successfully."
-#                     })
-#                     success_count += 1
-#                 except Exception as update_error:
-#                     db.session.rollback()
-#                     results.append({
-#                         "row": i + 2,
-#                         "status": "failed",
-#                         "message": f"Update error: {update_error}"
-#                     })
-#                     failure_count += 1
-#                     app.logger.error(f"Update error for row {i + 2}: {update_error}")
-#             else:
-#                 # Insert a new record
-#                 try:
-#                     row_data = row.drop(labels=['player_id'], errors='ignore').to_dict()  # Exclude player_id
-#                     new_record = TeamSelection(**row_data)
-#                     db.session.add(new_record)
-#                     db.session.commit()
-#                     results.append({
-#                         "row": i + 2,
-#                         "status": "success",
-#                         "message": "Record inserted successfully."
-#                     })
-#                     success_count += 1
-#                 except Exception as insert_error:
-#                     db.session.rollback()
-#                     results.append({
-#                         "row": i + 2,
-#                         "status": "failed",
-#                         "message": f"Insertion error: {insert_error}"
-#                     })
-#                     failure_count += 1
-#                     app.logger.error(f"Insertion error for row {i + 2}: {insert_error}")
-#
-#         # If no data was successfully inserted or updated, return an error response
-#         if success_count == 0:
-#             app.logger.error("No records were successfully processed.")
-#             return jsonify({
-#                 "error": "No records were successfully processed.",
-#                 "results": results
-#             }), 400
-#
-#         # Return a success response with the results
-#         return jsonify({
-#             "message": f"Sheet processed successfully with {success_count} successful operations and {failure_count} failures.",
-#             "results": results
-#         }), 200
-#     except Exception as e:
-#         # Rollback the transaction in case of an unhandled error
-#         db.session.rollback()
-#         app.logger.error(f"Unexpected error: {e}")
-#         return jsonify({"error": f"Unexpected error: {e}"}), 500
-
-
-@app.route('/insert_players_sheet_data')
-def insert_players_sheet_data():
-    try:
-        sheet_id = "11j5LnCerz_RhTYrVZoksFBLHyFVFq23TyItJt70x2MY"
-        sheet = get_google_sheet(sheet_id)
-        sheet_data = get_data_from_sheet(sheet, 'A', 'N')
-        results = []
-        for i, row in sheet_data.iterrows():
-            try:
-                password = row.get('password', '')
-                if not password:
-                    password = f"{row['player_name'][0]}{row['phone_number']}"
-                hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-
-                player = db.session.query(Player).filter_by(player_name=row['player_name']).first()
-
-                if player:
-                    # ����� ���� ����
-                    for key, value in row.items():
-                        if key != 'player_name':
-                            setattr(player, key, value)
-                    player.password = hashed_password
-                    results.append({"row": i + 2, "status": "updated", "message": "Player updated successfully"})
-                else:
-                    new_player = Player(**row.to_dict())
-                    new_player.password = hashed_password
-                    db.session.add(new_player)
-                    results.append({"row": i + 2, "status": "success", "message": "Player inserted successfully"})
-
-                db.session.commit()
-            except Exception as insert_error:
-                results.append({"row": i + 2, "status": "failed", "message": f"Insertion error: {insert_error}"})
-                log.logger.error(f"Insertion error for row {i + 2}: {insert_error}")
-                db.session.rollback()
-
-        db.session.close()
-        log.logger.info('Sheet data processed successfully!'), 200
-        return jsonify({"message": "Sheet processed successfully", "results": results}), 200
-    except Exception as e:
-        log.logger.error(e)
         return jsonify({"error": str(e)}), 400
 
 
@@ -404,16 +265,29 @@ def login():
     try:
         user = Player.query.filter_by(gmail=email).first()
         if user and check_password_hash(user.password, password):
-            user_data = {
+            # Create JWT payload
+            payload = {
                 'id': user.id,
                 'gmail': user.gmail,
                 'roles': [user.type],
-                'player_name': user.player_name
+                'player_name': user.player_name,
+                'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)  # Token expiry
             }
-            return (jsonify({
-                'data': user_data,
+
+            # Generate the token
+            token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+
+            return jsonify({
+                'token': token,
+                'data': {
+                    'id': user.id,
+                    'gmail': user.gmail,
+                    'roles': [user.type],
+                    'player_name': user.player_name
+                },
                 'status_code': 200,
-                'message': 'Player retrieved successfully !'}), 200)
+                'message': 'Login successful!'
+            }), 200
         else:
             return jsonify({"message": "Invalid credentials!"}), 401
     except SQLAlchemyError as e:

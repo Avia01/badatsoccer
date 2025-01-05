@@ -16,6 +16,7 @@ const LoginPage = () => {
         mutationKey: ['login'],
         onSuccess: (data) => {
             setAuth(data.data)
+            localStorage.setItem('JWT', data.token)
             navigate(from, {replace: true});
             showNotification('success', `User: ${data.data.player_name} has successfully logged in!`)
         },

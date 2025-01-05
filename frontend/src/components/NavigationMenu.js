@@ -55,6 +55,7 @@ const NavigationMenu = () => {
     const handleSignOut = () => {
         showNotification('success', 'Successfully signed out')
         setAuth({})
+        localStorage.removeItem('JWT')
         navigate(from, {replace: true});
         setIsOpen(false);
     }

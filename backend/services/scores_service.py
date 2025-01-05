@@ -1,5 +1,4 @@
 from datetime import datetime
-import logger
 from flask import jsonify, request
 from sqlalchemy import desc
 from sqlalchemy.exc import SQLAlchemyError
