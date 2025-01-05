@@ -46,15 +46,17 @@ const AdminPage = () => {
 
         async function loadSheet() {
             setIsDisabled(true);
-            setTimeout(() => setIsDisabled(false), 5000);
             if (isDisabled) {
                 showNotification('error', "Please wait for 5 seconds before reloading the log file!")
             } else {
                 try {
-                    const response = await insertTeamSelectionSheetData();
+                    const response = await insertTeamSelectionSheetData().finally(() => {
+                        setIsDisabled(false);
+                    });
                     showNotification('success', response.data.message);
                 } catch (e) {
                     showNotification('error', `Error loading sheet data: ${e.message}`)
+                    setIsDisabled(false);
                     return e.message
                 }
             }
@@ -77,7 +79,7 @@ const AdminPage = () => {
 
         const itemsArray = [
             {
-                "option": "Load Data",
+                "option": isDisabled ? 'Loading...' : "Load Data",
                 "fn": () => loadSheet(),
                 "disabled": isDisabled,
                 "id": 'load-button'

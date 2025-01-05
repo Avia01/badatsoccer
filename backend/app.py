@@ -82,7 +82,7 @@ def insert_team_selection_sheet_data():
         sheet = get_google_sheet(sheet_id)
         sheet_data = get_data_from_sheet(sheet, 'A', 'L')
 
-        sheet_data['date'] = sheet_data['date'].apply(lambda x: datetime.strptime(x, '%d/%m/%Y').date())
+        sheet_data['date'] = sheet_data['date'].apply(lambda x: parse_date(x))
 
         unique_pairs = sheet_data[['date', 'player_name']].drop_duplicates()
 
@@ -274,7 +274,7 @@ def login():
             }
 
             # Generate the token
-            token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+            token = jwt.encode(payload, JWT_SECRET_KEY, algorithm='HS256')
 
             return jsonify({
                 'token': token,
