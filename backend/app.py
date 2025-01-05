@@ -1,7 +1,6 @@
 import jwt
 import pandas as pd
 from flask_bcrypt import check_password_hash
-from settings import SECRET_KEY
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import and_, or_
 from db_models.models import db, TeamSelection, Player
