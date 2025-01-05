@@ -1,5 +1,5 @@
-import jwt
 import pandas as pd
+import jwt
 from flask_bcrypt import check_password_hash
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import and_, or_
@@ -16,7 +16,6 @@ import sys
 import os
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'services'))
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
@@ -272,7 +271,6 @@ def login():
                 'player_name': user.player_name,
                 'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)  # Token expiry
             }
-
             # Generate the token
             token = jwt.encode(payload, JWT_SECRET_KEY, algorithm='HS256')
 
